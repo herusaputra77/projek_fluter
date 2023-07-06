@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:projek_kemenkes/app/routes/app_pages.dart';
 
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
+  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,15 +31,14 @@ class HomeView extends GetView<HomeController> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Get.offAllNamed(Routes.LOGIN);
+            },
             child: Container(
               margin: EdgeInsets.only(right: 20),
               width: 30,
               height: 30,
-              child: Image.asset(
-                "assets/icons/qr.png",
-                fit: BoxFit.contain,
-              ),
+              child: Icon(Icons.logout),
             ),
           ),
         ],
@@ -240,17 +241,17 @@ class HomeView extends GetView<HomeController> {
                               ItemNav(
                                 icon: "riwayat",
                                 status: false,
-                                title: "Riwayat",
+                                title: "Penilaian",
                               ),
                               ItemNav(
                                 icon: "bantuan",
                                 status: false,
-                                title: "Bantuan",
+                                title: "Supervisi",
                               ),
                               ItemNav(
                                 icon: "inbox",
                                 status: false,
-                                title: "Inbox",
+                                title: "Leadership",
                               ),
                               ItemNav(
                                 icon: "profile",
@@ -272,6 +273,8 @@ class HomeView extends GetView<HomeController> {
     );
   }
 }
+
+void flot() {}
 
 class ItemTerbaru extends StatelessWidget {
   ItemTerbaru({
@@ -363,7 +366,7 @@ class ItemNav extends StatelessWidget {
         ),
         SizedBox(height: 5),
         Text(
-          "Beranda",
+          title,
           style: TextStyle(
             color: (status == true) ? Color(0xFFEC2028) : Color(0xFF747D8C),
           ),

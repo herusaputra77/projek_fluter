@@ -7,6 +7,8 @@ import 'package:projek_kemenkes/app/routes/app_pages.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
+  bool _obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,31 +30,34 @@ class LoginView extends GetView<LoginController> {
               ),
             ),
             SizedBox(height: 30),
-            Text(
-              "Silahkan masukkan NIK",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 30),
-            Text(
-              "Nomor NIK",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
             TextField(
               controller: controller.phoneC,
-              keyboardType: TextInputType.phone,
               autocorrect: false,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: "Cth. 131100xxxxxxxx",
+                hintText: "Masukkan Username",
               ),
             ),
+            SizedBox(height: 30),
+            TextField(
+              controller: controller.passwordC,
+              keyboardType: TextInputType.visiblePassword,
+              autocorrect: false,
+              obscureText: _obscureText,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Masukkan Password",
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    _obscureText = !_obscureText;
+                  },
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
             SizedBox(height: 10),
             Row(
               children: [
@@ -114,7 +119,7 @@ class LoginView extends GetView<LoginController> {
                           ),
                         ),
                         TextSpan(
-                          text: " Telkomsel",
+                          text: " Supervisi",
                           style: TextStyle(
                             color: Colors.black,
                           ),
@@ -127,7 +132,9 @@ class LoginView extends GetView<LoginController> {
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () => Get.offAllNamed(Routes.HOME),
+              onPressed: () {
+                controller.Pass();
+              },
               child: Text(
                 "MASUK",
                 style: TextStyle(
