@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   rename: ^2.1.1
   flutter_launcher_icons: ^0.13.1
+  get: 4.6.5
+  get_storage: ^2.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -49,6 +51,17 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   get: 4.6.5
+  convex_bottom_bar: ^3.2.0
+  http: ^1.1.0
+  shared_preferences: ^2.2.0
+  lottie: ^2.5.0
+  google_fonts: ^5.1.0
+  animated_text_kit: ^4.2.2
+  percent_indicator: ^4.2.3
+  carousel_slider: ^4.2.1
+  image_picker: ^1.0.1
+  file_picker: ^5.3.3
+  path_provider: ^2.0.15
 
 
 flutter_launcher_icons:
@@ -78,7 +91,13 @@ flutter:
     - assets/logo/
     - assets/icons/
     - assets/images/
-
+    - assets/super/
+    - assets/onbo/1.png
+    - assets/onbo/2.png
+    - assets/onbo/3.png
+    - assets/onbo/
+    - assets/
+    - assets/dash/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

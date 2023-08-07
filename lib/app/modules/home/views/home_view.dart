@@ -1,468 +1,538 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:projek_kemenkes/app/routes/app_pages.dart';
-
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:get_storage/get_storage.dart';
+import '../../../controllers/page_index_controller.dart';
+import '../../login/controllers/login_controller.dart';
+import 'color.dart' as color;
+import '../../../routes/app_pages.dart';
 import '../controllers/home_controller.dart';
+import 'package:lottie/lottie.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeView extends GetView<HomeController> {
-  int selectedIndex = 0;
+  final PageC = Get.find<PageIndexController>();
+  final LoginController _loginController = Get.find();
+  final box = GetStorage();
+  final userchani = GetStorage();
+  final SimpanImage = [
+    'assets/slider1.jpg',
+    'assets/slider2.jpg',
+    'assets/slider3.jpg'
+  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: RichText(
-          text: TextSpan(
-            text: "Hai, ",
-            style: TextStyle(
-              fontSize: 18,
-            ),
+    var width = MediaQuery.of(context).size.width;
+
+    void showDialog() {
+      Get.defaultDialog(
+        title: 'Logout',
+        middleText: 'Apakah Anda Yakin Ingin Keluar',
+        barrierDismissible: false,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text('Tidak'),
+          ),
+          TextButton(
+            onPressed: () {
+              controller.logout();
+            },
+            child: Text('YA'),
+          ),
+        ],
+      );
+    }
+
+    void showModalBottomSheet(BuildContext context) {
+      Get.bottomSheet(
+        Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              TextSpan(
-                text: "User",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
+              ListTile(
+                leading: Icon(Icons.person_3),
+                title: Text('Detail  Profil'),
+                onTap: () => Get.toNamed(Routes.DETAILPROFIL),
+              ),
+              ListTile(
+                leading: Icon(Icons.logout_outlined),
+                title: Text('Logout'),
+                onTap: () {
+                  showDialog();
+                },
+              ),
+              // Tambahkan lebih banyak ListTile untuk menu lainnya jika diperlukan
             ],
           ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Get.offAllNamed(Routes.LOGIN);
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 20),
-              width: 30,
-              height: 30,
-              child: Icon(Icons.logout),
-            ),
-          ),
-        ],
-        backgroundColor: Color(0xFFEC2028),
-        elevation: 0,
-      ),
-      body: Stack(
-        children: [
-          ClipPath(
-            clipper: ClipPathClass(),
-            child: Container(
-              height: 250,
-              width: Get.width,
-              color: Color(0xFFEC2028),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Column(
-              children: [
-                Column(
+      );
+    }
+
+    return Scaffold(
+        backgroundColor: Color.fromARGB(255, 146, 109, 209),
+        body: SafeArea(
+          child: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 230, 226, 238),
+                //     gradient: LinearGradient(
+                //   colors: [
+                //     Color.fromARGB(255, 160, 51, 233),
+                //     Colors.blue[900]!,
+                //     Color.fromARGB(255, 255, 255, 255),
+                //   ],
+                //   begin: Alignment.topLeft,
+                //   end: Alignment.bottomRight,
+                // )
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   children: [
-                    ClipPath(
-                      clipper: ClipInfoClass(),
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        margin: EdgeInsets.symmetric(horizontal: 25),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFFE52D27),
-                              Color(0xFFB31217),
-                            ],
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Selamat Datang di Aplikasi",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                // Image.asset("assets/logo/simpati.png"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // Container(
-                //   height: 7,
-                //   color: Colors.grey[300],
-                // ),
-                Expanded(
-                  child: Container(
-                    // color: Colors.purple,
-                    child: Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // body
-                        Expanded(
-                          child: ListView(
-                            padding: EdgeInsets.symmetric(horizontal: 25),
-                            children: [
-                              // SizedBox(height: 20),
-                              // Text(
-                              //   "Kategori Paket",
-                              //   style: TextStyle(
-                              //     fontSize: 20,
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              // ),
-                              SizedBox(height: 20),
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     ItemKategori(
-                              //       title: "Internet",
-                              //       icon: "assets/icons/internet.png",
-                              //     ),
-                              //     ItemKategori(
-                              //       title: "Telpon",
-                              //       icon: "assets/icons/telpon.png",
-                              //     ),
-                              //     ItemKategori(
-                              //       title: "SMS",
-                              //       icon: "assets/icons/sms.png",
-                              //     ),
-                              //     ItemKategori(
-                              //       title: "Roaming",
-                              //       icon: "assets/icons/roaming.png",
-                              //     ),
-                              //   ],
-                              // ),
-                              // SizedBox(height: 30),
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     ItemKategori(
-                              //       title: "Hiburan",
-                              //       icon: "assets/icons/hiburan.png",
-                              //     ),
-                              //     ItemKategori(
-                              //       title: "Unggulan",
-                              //       icon: "assets/icons/unggulan.png",
-                              //     ),
-                              //     ItemKategori(
-                              //       title: "Tersimpan",
-                              //       icon: "assets/icons/tersimpan.png",
-                              //     ),
-                              //     ItemKategori(
-                              //       title: "Riwayat",
-                              //       icon: "assets/icons/riwayat-icon.png",
-                              //     ),
-                              //   ],
-                              // ),
-                              SizedBox(height: 30),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // Text(
-                                  //   "Terbaru dari Telkomsel",
-                                  //   style: TextStyle(
-                                  //     fontSize: 20,
-                                  //     fontWeight: FontWeight.bold,
-                                  //   ),
-                                  // ),
-                                  // Text(
-                                  //   "Lihat Semua",
-                                  //   style: TextStyle(
-                                  //     fontSize: 16,
-                                  //     color: Colors.red,
-                                  //     fontWeight: FontWeight.bold,
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    // ItemTerbaru(
-                                    //   image: "assets/images/images-1.png",
-                                    // ),
-                                    // ItemTerbaru(
-                                    //   image: "assets/images/images-2.png",
-                                    // ),
-                                    // ItemTerbaru(
-                                    //   image: "assets/images/images-1.png",
-                                    // ),
-                                    // ItemTerbaru(
-                                    //   image: "assets/images/images-2.png",
-                                    // ),
-                                    // ItemTerbaru(
-                                    //   image: "assets/images/images-1.png",
-                                    // ),
-                                    // ItemTerbaru(
-                                    //   image: "assets/images/images-2.png",
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 30),
-                            ],
+                        Text(
+                          'Hai, ${userchani.read('userchan')}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 147, 19, 151),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        // Navigation
-                        Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          height: 100,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          // color: Colors.amber,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ItemNav(
-                                icon: "beranda",
-                                status: true,
-                                title: "Beranda",
-                              ),
-                              ItemNav(
-                                icon: "riwayat",
-                                status: false,
-                                title: "Penilaian",
-                              ),
-                              ItemNav(
-                                icon: "bantuan",
-                                status: false,
-                                title: "Supervisi",
-                              ),
-                              ItemNav(
-                                icon: "inbox",
-                                status: false,
-                                title: "Leadership",
-                              ),
-                              ItemNav(
-                                icon: "profile",
-                                status: false,
-                                title: "Akun Saya",
-                              ),
-                            ],
-                          ),
+                        // IconButton(
+                        //     onPressed: () {
+                        //       showModalBottomSheet(context);
+                        //     },
+                        //     icon: Icon(Icons.person,
+                        //         size: 20, color: Colors.white))
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(context);
+                          },
+                          child: Container(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset('assets/dash/user.png')),
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-void flot() {}
-
-class ItemTerbaru extends StatelessWidget {
-  ItemTerbaru({
-    Key? key,
-    required this.image,
-  }) : super(key: key);
-
-  final String image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 20),
-      width: Get.width * 0.7,
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.amber,
-        borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(
-          image: AssetImage(image),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-}
-
-class ItemKategori extends StatelessWidget {
-  ItemKategori({
-    Key? key,
-    required this.title,
-    required this.icon,
-  }) : super(key: key);
-
-  final String title;
-  final String icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 50,
-          height: 50,
-          child: Image.asset(
-            icon,
-            fit: BoxFit.cover,
-          ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ItemNav extends StatelessWidget {
-  ItemNav({
-    Key? key,
-    required this.status,
-    required this.icon,
-    required this.title,
-  }) : super(key: key);
-
-  final bool status;
-  final String title;
-  final String icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 30,
-          child: Image.asset(
-            (status == true)
-                ? "assets/icons/$icon-active.png"
-                : "assets/icons/$icon.png",
-            fit: BoxFit.contain,
-          ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          title,
-          style: TextStyle(
-            color: (status == true) ? Color(0xFFEC2028) : Color(0xFF747D8C),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class StatusCard extends StatelessWidget {
-  StatusCard({
-    Key? key,
-    required this.title,
-    required this.data,
-    required this.satuan,
-  }) : super(key: key);
-
-  final String title;
-  final String data;
-  final String satuan;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        width: Get.width * 0.25,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            RichText(
-              text: TextSpan(
-                text: data,
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Color(0xFFEC2028),
-                  fontWeight: FontWeight.bold,
-                ),
-                children: [
-                  TextSpan(
-                    text: " $satuan",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF747D8C),
+                    SizedBox(
+                      height: 20,
                     ),
-                  )
-                ],
-              ),
-            ),
-          ],
+                    Container(
+                      clipBehavior: Clip.hardEdge,
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Image.asset('assets/icons/car-.png',
+                              fit: BoxFit.cover),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // AnimatedTextKit(
+                                //   animatedTexts: [
+                                //     WavyAnimatedText('E-Supervisi'),
+                                //     WavyAnimatedText('Perawat'),
+                                //   ],
+                                //   isRepeatingAnimation: true,
+                                // ),
+                                RichText(
+                                    text: TextSpan(
+                                        text:
+                                            'Aplikasi Untuk Mempermudah \n Kegiatan Supervisi pengawas \n dan Survei Penilaian \n Pekerjaan',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16))),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 70,
+                      child:
+                          ListView(scrollDirection: Axis.horizontal, children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () =>
+                                    Get.offAllNamed(Routes.HASILSUPERVISI),
+                                child: Container(
+                                    height: 50,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(12)),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            offset: Offset(5, 5),
+                                            blurRadius: Checkbox.width,
+                                            color: Colors.black,
+                                          ),
+                                        ]),
+                                    child: Image.asset(
+                                      'assets/dash/filetam.png',
+                                    )),
+                              ),
+                              SizedBox(width: 15),
+                              InkWell(
+                                onTap: () => Get.toNamed(Routes.TAMPILUPLOAD),
+                                child: Container(
+                                    height: 50,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(12)),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            offset: Offset(5, 5),
+                                            blurRadius: Checkbox.width,
+                                            color: Colors.black,
+                                          ),
+                                        ]),
+                                    child: Image.asset(
+                                      'assets/dash/filetam.png',
+                                    )),
+                              ),
+                              SizedBox(width: 15),
+                              Container(
+                                  height: 50,
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          offset: Offset(5, 5),
+                                          blurRadius: Checkbox.width,
+                                          color: Colors.black,
+                                        ),
+                                      ]),
+                                  child: Image.asset(
+                                    'assets/dash/filetam.png',
+                                  )),
+                              SizedBox(width: 15),
+                              SizedBox(width: 15),
+                              Container(
+                                  height: 50,
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          offset: Offset(5, 5),
+                                          blurRadius: Checkbox.width,
+                                          color: Colors.black,
+                                        ),
+                                      ]),
+                                  child: Image.asset(
+                                    'assets/dash/filetam.png',
+                                  )),
+                              SizedBox(width: 15),
+                            ],
+                          ),
+                        ),
+                      ]),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height,
+                            decoration: BoxDecoration(
+                              color: Color(0xffDDDDE2),
+                            ),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(controller.persent.text),
+                                    Text("${controller.persent.text}",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Flexible(
+                                                  child: InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      height: 90,
+                                                      width: 90,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/dash/team.png',
+                                                            width: 60,
+                                                            height: 60,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Text('Leader',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 25),
+                                                Flexible(
+                                                  child: InkWell(
+                                                    onTap: () =>
+                                                        Get.offAllNamed(
+                                                            Routes.UPLOADFILE),
+                                                    child: Container(
+                                                      height: 90,
+                                                      width: 90,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/dash/upload.png',
+                                                            width: 60,
+                                                            height: 60,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Text('Upload File',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 25),
+                                                Flexible(
+                                                  child: InkWell(
+                                                    onTap: () =>
+                                                        Get.offAllNamed(
+                                                            Routes.PENILAIAN),
+                                                    child: Container(
+                                                      height: 90,
+                                                      width: 90,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/dash/article.png',
+                                                            width: 60,
+                                                            height: 60,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Text('Penilaian',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 25),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Flexible(
+                                                  child: InkWell(
+                                                    onTap: () => Get.toNamed(
+                                                        Routes.SUPERVISI),
+                                                    child: Container(
+                                                      height: 90,
+                                                      width: 90,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/dash/notepad.png',
+                                                            width: 60,
+                                                            height: 60,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Text('Supervisi',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 25),
+                                                Flexible(
+                                                  child: InkWell(
+                                                    onTap: () =>
+                                                        Get.offAllNamed(Routes
+                                                            .HASILSUPERVISI),
+                                                    child: Container(
+                                                      height: 90,
+                                                      width: 90,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/dash/test.png',
+                                                            width: 60,
+                                                            height: 60,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Text('Supervisi',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 25),
+                                                Flexible(
+                                                  child: InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      height: 90,
+                                                      width: 90,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/dash/test.png',
+                                                            width: 60,
+                                                            height: 60,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Text('Penilaian',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )),
         ),
+        bottomNavigationBar: ConvexAppBar(
+          style: TabStyle.fixedCircle,
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          activeColor: Color.fromARGB(255, 62, 3, 97),
+          color: Colors.deepPurpleAccent[100],
+          items: [
+            TabItem(icon: Icons.home, title: 'Home'),
+            TabItem(icon: Icons.note_add, title: 'Penilaian'),
+            TabItem(icon: Icons.supervised_user_circle, title: 'Profil'),
+            if (_loginController.roleControl.text == 'admin')
+              TabItem(icon: Icons.verified_user_sharp, title: 'Tambah'),
+          ],
+          initialActiveIndex: PageC.pageIndex.value,
+          onTap: (int i) => PageC.Changepage(i),
+        ));
+  }
+}
+
+Widget buildImage(String SimpanImage, int index) => Container(
+    margin: EdgeInsets.symmetric(horizontal: 12),
+    width: 400,
+    height: 200,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(50),
+      child: Image.asset(
+        SimpanImage,
+        fit: BoxFit.cover,
+        height: 100,
+        width: 350,
       ),
-    );
-  }
-}
-
-class ClipInfoClass extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height);
-    path.lineTo(size.width - 80, size.height);
-    path.lineTo(size.width, size.height - 80);
-    path.lineTo(size.width, 0);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
-}
-
-class ClipPathClass extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height - 60);
-    path.quadraticBezierTo(
-      size.width / 2,
-      size.height,
-      size.width,
-      size.height - 60,
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
-}
+    ));
